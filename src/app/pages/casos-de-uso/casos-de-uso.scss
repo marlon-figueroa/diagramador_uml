@@ -1,3 +1,32 @@
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.canvas-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.action svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: none;
+}
+
 .diagramador {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
@@ -117,6 +146,14 @@
 }
 
 @media (max-width: 767.98px) {
+  .page-head {
+    flex-direction: column;
+  }
+
+  .canvas-actions {
+    margin-left: 0;
+  }
+
   .diagramador {
     grid-template-columns: 1fr;
   }

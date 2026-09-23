@@ -1,7 +1,29 @@
 <section class="pt-2 pb-4">
-  <p class="text-primary fw-semibold text-uppercase small letter-wide mb-2">Diagramador UML</p>
-  <h1 class="display-6 font-display mb-2">Casos de uso</h1>
-  <p class="text-body-secondary mb-3">{{ hint() }}</p>
+  <div class="page-head">
+    <div>
+      <p class="text-primary fw-semibold text-uppercase small letter-wide mb-2">Diagramador UML</p>
+      <h1 class="display-6 font-display mb-2">Casos de uso</h1>
+      <p class="text-body-secondary mb-0">{{ hint() }}</p>
+    </div>
+    <div class="canvas-actions">
+      <button type="button" class="btn btn-outline-primary action" [disabled]="busy()" (click)="exportImage()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3.5" y="4.5" width="17" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="1.8" />
+          <circle cx="8.5" cy="9" r="1.35" fill="currentColor" />
+          <path d="M4.4 16.6 8.8 12.4a1.1 1.1 0 0 1 1.5 0l3.4 3.3 1.5-1.4a1.1 1.1 0 0 1 1.5 0l2.4 2.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Generar imagen
+      </button>
+      <button type="button" class="btn btn-outline-primary action" [disabled]="busy()" (click)="exportPdf()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7.2 3.5h6.8L19 8.4V20a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 6 20V5a1.5 1.5 0 0 1 1.2-1.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+          <path d="M14 3.6V8.6h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+          <path d="M8.4 13h7.2M8.4 16.2h4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+        Generar PDF
+      </button>
+    </div>
+  </div>
 
   <div class="diagramador">
     <aside class="tools-panel" aria-label="Herramientas del diagrama">
@@ -50,14 +72,45 @@
         }
       </div>
 
-      <button type="button" class="btn btn-outline-secondary w-100 mt-4" (click)="choose('select')">
+      <button type="button" class="btn btn-outline-secondary action w-100 mt-4" (click)="choose('select')">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6.2 3.6v12.4l3.1-3 2 5.1 2-.8-2-5 4.4-.2L6.2 3.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+        </svg>
         Seleccionar
       </button>
-      <button type="button" class="btn btn-outline-secondary w-100 mt-2" (click)="removeSelection()">
+      <button type="button" class="btn btn-outline-secondary action w-100 mt-2" (click)="removeSelection()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8" />
+          <path d="M9 9l6 6M15 9l-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
         Quitar selección
       </button>
-      <button type="button" class="btn btn-outline-secondary w-100 mt-2" (click)="clearCanvas()">
+      <button type="button" class="btn btn-outline-secondary action w-100 mt-2" (click)="clearCanvas()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 7.5h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <path d="M9.5 7.4V5.8A1.3 1.3 0 0 1 10.8 4.5h2.4a1.3 1.3 0 0 1 1.3 1.3v1.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <path d="M7.3 7.5 8.1 18.6a1.4 1.4 0 0 0 1.4 1.2h5a1.4 1.4 0 0 0 1.4-1.2l.8-11.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+        </svg>
         Quitar todo
+      </button>
+
+      <h2 class="h6 font-display mt-4 mb-2">Proyecto</h2>
+      <input class="visually-hidden" type="file" accept=".json,application/json" (change)="importProject($event)" #projectFile />
+      <button type="button" class="btn btn-outline-secondary action w-100" (click)="projectFile.click()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3.6v9.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <path d="M8.2 10.2 12 14l3.8-3.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M4.8 14.2V19a1.5 1.5 0 0 0 1.5 1.5h11.4A1.5 1.5 0 0 0 19.2 19v-4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+        Importar
+      </button>
+      <button type="button" class="btn btn-outline-secondary action w-100 mt-2" (click)="exportProject()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 14.4V4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <path d="M8.2 7.6 12 3.8l3.8 3.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M4.8 14.2V19a1.5 1.5 0 0 0 1.5 1.5h11.4A1.5 1.5 0 0 0 19.2 19v-4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+        Exportar
       </button>
       <p class="tools-note mb-0 mt-3">Doble clic en un objeto para cambiar su nombre. Enter guarda y Escape cancela.</p>
     </aside>

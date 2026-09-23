@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, signal, viewChild } from '@angular/core';
 import { dia, shapes } from '@joint/core';
+import { canvasBlob, canvasToPdf, downloadBlob, rasterizeSvg } from './diagram-export';
 
 const YELLOW = '#fff3b0';
 const DARK = '#3f3f46';
@@ -89,6 +90,7 @@ export class CasosDeUso implements AfterViewInit, OnDestroy {
 
   protected readonly tool = signal<Tool>('select');
   protected readonly hint = signal('Selecciona un componente y haz clic en el lienzo.');
+  protected readonly busy = signal(false);
   protected readonly editor = signal<{ id: string; kind: 'element' | 'link'; left: number; top: number } | null>(null);
 
   protected readonly components: { id: ShapeTool; label: string }[] = [
@@ -256,6 +258,108 @@ export class CasosDeUso implements AfterViewInit, OnDestroy {
     this.counts.actor = 0;
     this.counts.usecase = 0;
     this.counts.system = 0;
+  }
+
+  protected async exportImage(): Promise<void> {
+    const canvas = await this.captureCanvas();
+    if (!canvas) {
+      return;
+    }
+    downloadBlob(await canvasBlob(canvas, 'image/png'), 'casos-de-uso.png');
+  }
+
+  protected async exportPdf(): Promise<void> {
+    const canvas = await this.captureCanvas();
+    if (!canvas) {
+      return;
+    }
+    downloadBlob(await canvasToPdf(canvas), 'casos-de-uso.pdf');
+  }
+
+  protected exportProject(): void {
+    if (!this.graph) {
+      return;
+    }
+    const payload = {
+      version: 1,
+      kind: 'casos-de-uso',
+      counts: { ...this.counts },
+      graph: this.graph.toJSON(),
+    };
+    downloadBlob(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }), 'casos-de-uso.json');
+  }
+
+  protected async importProject(event: Event): Promise<void> {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement) || !this.graph) {
+      return;
+    }
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) {
+      return;
+    }
+    try {
+      const data = JSON.parse(await file.text()) as {
+        version?: number;
+        kind?: string;
+        counts?: Partial<Record<ShapeTool, number>>;
+        graph?: dia.Graph.JSON;
+      };
+      if (data.version !== 1 || data.kind !== 'casos-de-uso' || !Array.isArray(data.graph?.cells)) {
+        this.hint.set('El archivo no es un proyecto de casos de uso.');
+        return;
+      }
+      if (this.editor()) {
+        this.ignoreRenameBlur = true;
+        this.editor.set(null);
+      }
+      this.graph.fromJSON(data.graph);
+      this.selectedId = null;
+      this.sourceId = null;
+      const counted = this.countShapes();
+      this.counts.actor = savedCount(data.counts?.actor, counted.actor);
+      this.counts.usecase = savedCount(data.counts?.usecase, counted.usecase);
+      this.counts.system = savedCount(data.counts?.system, counted.system);
+      this.paintElements(null);
+      this.hint.set(this.hintFor(this.tool()));
+    } catch {
+      this.hint.set('No se pudo importar el proyecto.');
+    }
+  }
+
+  private async captureCanvas(): Promise<HTMLCanvasElement | null> {
+    const svg = this.paperHost().nativeElement.querySelector('svg');
+    if (!svg || this.busy()) {
+      return null;
+    }
+    this.busy.set(true);
+    this.paintElements(null);
+    const pending = rasterizeSvg(svg);
+    this.paintElements(this.selectedId);
+    try {
+      return await pending;
+    } catch {
+      this.hint.set('No se pudo generar el archivo. Inténtalo de nuevo.');
+      return null;
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  private countShapes(): Record<ShapeTool, number> {
+    const counts: Record<ShapeTool, number> = { actor: 0, usecase: 0, system: 0 };
+    for (const element of this.graph?.getElements() ?? []) {
+      const type = element.get('type');
+      if (type === 'uml.Actor') {
+        counts.actor += 1;
+      } else if (type === 'standard.Ellipse') {
+        counts.usecase += 1;
+      } else if (type === 'standard.Rectangle') {
+        counts.system += 1;
+      }
+    }
+    return counts;
   }
 
   private place(kind: ShapeTool, x: number, y: number): void {
@@ -429,4 +533,8 @@ export class CasosDeUso implements AfterViewInit, OnDestroy {
     }
     return 'Haz clic en el origen y luego en el destino. La línea queda en negro.';
   }
+}
+
+function savedCount(value: number | undefined, fallback: number): number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? Math.floor(value) : fallback;
 }
