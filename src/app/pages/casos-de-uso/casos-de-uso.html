@@ -95,7 +95,7 @@
       </button>
 
       <h2 class="h6 font-display mt-4 mb-2">Proyecto</h2>
-      <input class="visually-hidden" type="file" accept=".json,application/json" (change)="importProject($event)" #projectFile />
+      <input class="visually-hidden" type="file" tabindex="-1" aria-hidden="true" accept=".json,application/json" (change)="importProject($event)" #projectFile />
       <button type="button" class="btn btn-outline-secondary action w-100" (click)="projectFile.click()">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 3.6v9.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
