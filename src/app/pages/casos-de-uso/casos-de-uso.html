@@ -1,0 +1,81 @@
+<section class="pt-2 pb-4">
+  <p class="text-primary fw-semibold text-uppercase small letter-wide mb-2">Diagramador UML</p>
+  <h1 class="display-6 font-display mb-2">Casos de uso</h1>
+  <p class="text-body-secondary mb-3">{{ hint() }}</p>
+
+  <div class="diagramador">
+    <aside class="tools-panel" aria-label="Herramientas del diagrama">
+      <h2 class="h6 font-display mb-2">Componentes</h2>
+      <div class="d-grid gap-2">
+        @for (item of components; track item.id) {
+          <button
+            type="button"
+            class="tool"
+            [class.active]="tool() === item.id"
+            [attr.aria-pressed]="tool() === item.id"
+            (click)="choose(item.id)"
+          >
+            @switch (item.id) {
+              @case ('actor') {
+                <svg class="swatch" viewBox="0 0 32 32" aria-hidden="true">
+                  <circle cx="16" cy="7" r="3.2" fill="#fff3b0" stroke="#111" stroke-width="1.6" />
+                  <path d="M16 10.2v7M10 14.2h12M16 17.2 11 25M16 17.2 21 25" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round" />
+                </svg>
+              }
+              @case ('usecase') {
+                <span class="swatch swatch-case" aria-hidden="true"></span>
+              }
+              @case ('system') {
+                <span class="swatch swatch-system" aria-hidden="true"></span>
+              }
+            }
+            <span>{{ item.label }}</span>
+          </button>
+        }
+      </div>
+
+      <h2 class="h6 font-display mt-4 mb-2">Conectores</h2>
+      <div class="d-grid gap-2">
+        @for (item of connectors; track item.id) {
+          <button
+            type="button"
+            class="tool"
+            [class.active]="tool() === item.id"
+            [attr.aria-pressed]="tool() === item.id"
+            (click)="choose(item.id)"
+          >
+            <span class="swatch swatch-line" [class.dashed]="item.id === 'include' || item.id === 'extend'" [class.arrow]="item.id !== 'association'" aria-hidden="true"></span>
+            <span>{{ item.label }}</span>
+          </button>
+        }
+      </div>
+
+      <button type="button" class="btn btn-outline-secondary w-100 mt-4" (click)="choose('select')">
+        Seleccionar
+      </button>
+      <button type="button" class="btn btn-outline-secondary w-100 mt-2" (click)="removeSelection()">
+        Quitar selección
+      </button>
+      <button type="button" class="btn btn-outline-secondary w-100 mt-2" (click)="clearCanvas()">
+        Quitar todo
+      </button>
+      <p class="tools-note mb-0 mt-3">Doble clic en un objeto para cambiar su nombre. Enter guarda y Escape cancela.</p>
+    </aside>
+
+    <div class="paper-host" [class.is-placing]="tool() === 'actor' || tool() === 'usecase' || tool() === 'system'" [class.is-connecting]="tool() === 'association' || tool() === 'include' || tool() === 'extend' || tool() === 'generalization'" #paperHost></div>
+  </div>
+</section>
+
+@if (editor(); as editor) {
+  <input
+    #renameInput
+    class="rename-input"
+    type="text"
+    aria-label="Nombre del objeto"
+    [style.left.px]="editor.left"
+    [style.top.px]="editor.top"
+    (keydown.enter)="commitRename()"
+    (keydown.escape)="cancelRename()"
+    (blur)="commitRename()"
+  />
+}

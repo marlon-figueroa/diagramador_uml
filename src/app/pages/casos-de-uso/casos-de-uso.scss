@@ -1,0 +1,127 @@
+.diagramador {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.tools-panel {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem;
+  background: var(--bs-tertiary-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1.1rem;
+}
+
+.tool {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  color: var(--bs-body-color);
+  text-align: left;
+  background: #fff;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.85rem;
+  font-family: 'PT Sans', system-ui, sans-serif;
+  font-weight: 700;
+}
+
+.tool.active {
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.12);
+  border-color: var(--bs-primary);
+}
+
+.swatch {
+  flex: 0 0 2.4rem;
+  width: 2.4rem;
+}
+
+.swatch-case,
+.swatch-system {
+  display: inline-block;
+  height: 1.35rem;
+  background: #fff3b0;
+  border: 1.5px solid #111;
+}
+
+.swatch-case {
+  border-radius: 999px;
+}
+
+.swatch-system {
+  height: 1.45rem;
+  border-radius: 0.2rem;
+}
+
+.swatch-line {
+  position: relative;
+  height: 0;
+  border-top: 2px solid #111;
+}
+
+.swatch-line.dashed {
+  border-top-style: dashed;
+}
+
+.swatch-line.arrow::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 7px solid #111;
+}
+
+.paper-host {
+  width: 100%;
+  min-height: 640px;
+  border: 1px solid #d5dee8;
+  border-radius: 1.1rem;
+  overflow: hidden;
+  background: #fff;
+}
+
+.paper-host.is-placing,
+.paper-host.is-connecting {
+  cursor: crosshair;
+}
+
+.tools-note {
+  color: var(--bs-secondary-color);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.rename-input {
+  position: fixed;
+  z-index: 30;
+  min-width: 11rem;
+  max-width: 18rem;
+  padding: 0.35rem 0.6rem;
+  color: #111;
+  font-family: 'PT Sans', system-ui, sans-serif;
+  font-size: 0.95rem;
+  background: #fff3b0;
+  border: 1.5px solid #111;
+  border-radius: 0.55rem;
+  box-shadow: 0 8px 24px rgba(18, 32, 51, 0.16);
+}
+
+.paper-host svg text {
+  font-family: 'PT Sans', sans-serif;
+}
+
+@media (max-width: 767.98px) {
+  .diagramador {
+    grid-template-columns: 1fr;
+  }
+
+  .tools-panel {
+    position: static;
+  }
+}

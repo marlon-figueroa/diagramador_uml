@@ -1,0 +1,106 @@
+:root,
+[data-bs-theme='light'] {
+  --bs-font-sans-serif: 'PT Sans', system-ui, sans-serif;
+  --bs-body-font-family: 'PT Sans', system-ui, sans-serif;
+  --bs-body-bg: #f3f6fb;
+  --bs-body-color: #122033;
+  --bs-secondary-color: #5b6b80;
+  --bs-tertiary-bg: #ffffff;
+  --bs-border-color: #d5dee8;
+  --bs-primary: #1d4ed8;
+  --bs-primary-rgb: 29, 78, 216;
+  --bs-secondary: #3b5b8c;
+  --bs-secondary-rgb: 59, 91, 140;
+  --bs-link-color: #1d4ed8;
+  --bs-link-hover-color: #1e3a8a;
+  --bs-emphasis-color: #122033;
+  --app-blue: #1d4ed8;
+}
+
+[data-bs-theme='dark'] {
+  --bs-body-bg: #0b1220;
+  --bs-body-color: #e8eef7;
+  --bs-secondary-color: #9aabc0;
+  --bs-tertiary-bg: #121a2a;
+  --bs-border-color: #2a3a52;
+  --bs-primary: #7eb6ff;
+  --bs-primary-rgb: 126, 182, 255;
+  --bs-secondary: #8aa4c8;
+  --bs-secondary-rgb: 138, 164, 200;
+  --bs-link-color: #7eb6ff;
+  --bs-link-hover-color: #b9d6ff;
+  --bs-emphasis-color: #e8eef7;
+  --app-blue: #7eb6ff;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: 'PT Sans', system-ui, sans-serif;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+.font-display {
+  font-family: 'PT Sans', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brand-mark {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.14);
+}
+
+.brand-mark svg,
+.theme-toggle svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.theme-toggle svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.nav-topic {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.85rem;
+  line-height: 1.15;
+  color: var(--bs-body-color);
+}
+
+.nav-topic.active {
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.12);
+}
+
+.nav-topic-icon {
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  color: var(--bs-primary);
+}
+
+.nav-topic-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.nav-topic-desc {
+  display: block;
+  max-width: 9.75rem;
+  color: var(--bs-secondary-color);
+  font-weight: 400;
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
+.letter-wide {
+  letter-spacing: 0.08em;
+}
