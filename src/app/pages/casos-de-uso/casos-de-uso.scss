@@ -1,3 +1,18 @@
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.editor {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  padding-top: 0.5rem;
+}
+
 .page-head {
   display: flex;
   align-items: flex-start;
@@ -29,14 +44,16 @@
 
 .diagramador {
   display: grid;
+  flex: 1 1 auto;
   grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   gap: 1rem;
-  align-items: start;
+  min-height: 0;
 }
 
 .tools-panel {
-  position: sticky;
-  top: 1rem;
+  min-height: 0;
+  overflow: auto;
   padding: 1rem;
   background: var(--bs-tertiary-bg);
   border: 1px solid var(--bs-border-color);
@@ -107,8 +124,9 @@
 }
 
 .paper-host {
+  position: relative;
   width: 100%;
-  min-height: 640px;
+  min-height: 0;
   border: 1px solid #d5dee8;
   border-radius: 1.1rem;
   overflow: hidden;
@@ -156,9 +174,10 @@
 
   .diagramador {
     grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(24rem, 1fr);
   }
 
   .tools-panel {
-    position: static;
+    overflow: visible;
   }
 }

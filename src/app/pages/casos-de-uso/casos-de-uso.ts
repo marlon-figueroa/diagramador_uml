@@ -81,7 +81,6 @@ export class CasosDeUso implements AfterViewInit, OnDestroy {
   private readonly paperHost = viewChild.required<ElementRef<HTMLDivElement>>('paperHost');
   private graph?: dia.Graph;
   private paper?: dia.Paper;
-  private paperWidth = 0;
   private sourceId: string | null = null;
   private selectedId: string | null = null;
   private ignoreRenameBlur = false;
@@ -106,19 +105,6 @@ export class CasosDeUso implements AfterViewInit, OnDestroy {
     { id: 'generalization', label: 'Generalización' },
   ];
 
-  private readonly onResize = (): void => {
-    const host = this.paperHost()?.nativeElement;
-    if (!host || !this.paper) {
-      return;
-    }
-    const width = Math.max(host.clientWidth, 320);
-    if (width === this.paperWidth) {
-      return;
-    }
-    this.paperWidth = width;
-    this.paper.setDimensions(width, 640);
-  };
-
   private readonly onKeyDown = (event: KeyboardEvent): void => {
     if (event.key !== 'Delete' && event.key !== 'Backspace') {
       return;
@@ -142,8 +128,8 @@ export class CasosDeUso implements AfterViewInit, OnDestroy {
     this.paper = new dia.Paper({
       el: host,
       model: this.graph,
-      width: Math.max(host.clientWidth, 320),
-      height: 640,
+      width: null,
+      height: null,
       gridSize: 10,
       drawGrid: true,
       background: { color: '#ffffff' },
@@ -186,14 +172,11 @@ export class CasosDeUso implements AfterViewInit, OnDestroy {
       }
     });
 
-    this.paperWidth = Math.max(host.clientWidth, 320);
-    window.addEventListener('resize', this.onResize);
     window.addEventListener('keydown', this.onKeyDown);
   }
 
   ngOnDestroy(): void {
     window.removeEventListener('keydown', this.onKeyDown);
-    window.removeEventListener('resize', this.onResize);
     this.paper?.remove();
     this.graph?.clear();
   }
